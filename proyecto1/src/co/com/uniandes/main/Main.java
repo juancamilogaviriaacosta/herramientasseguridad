@@ -2,7 +2,6 @@ package co.com.uniandes.main;
 
 import java.io.File;
 import java.net.URL;
-
 import jpl.Query;
 
 public class Main {
