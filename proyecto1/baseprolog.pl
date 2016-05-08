@@ -4,6 +4,36 @@ JUAN CAMILO GAVIRIA
 NICOLAS PINZON
 */
 
+/* Definicion de permisos */
+:- dynamic permiso/1.
+permiso_peligroso(pINTERNET).
+permiso_peligroso(pREAD_PHONE_STATE).
+permiso_peligroso(pSEND_SMS).
+permiso_peligroso(pWRITE_EXTERNAL_STORAGE).
+permiso_peligroso(pRECEIVE_SMS).
+permiso_peligroso(pREAD_SMS).
+permiso_peligroso(pWRITE_SMS).
+permiso_peligroso(pACCESS_COARSE_LOCATION).
+permiso_peligroso(pREAD_CONTACTS).
+permiso_peligroso(pWRITE_CONTACTS).
+permiso_peligroso(pACCESS_FINE_LOCATION).
+permiso_peligroso(pCALL_PHONE).
+permiso_peligroso(pBLUETOOTH_ADMIN).
+permiso_peligroso(pCHANGE_CONFIGURATION).
+permiso_peligroso(pPROCESS_OUTGOING_CALLS).
+permiso_peligroso(pWRITE_CALL_LOG).
+permiso_peligroso(pREAD_SOCIAL_STREAM).
+
+
+
+
+
+
+
+
+
+
+
 
 /* Definicion de usurios */
 usuario(juan).
@@ -16,9 +46,7 @@ recurso(musica).
 recurso(tarea).
 recurso(fotos).
 
-/* Definicion de permisos */
-permiso(leer).
-permiso(escribir).
+
 
 /* Asignaciones	de permisos a usuarios sobre recursos */
 :- dynamic usuario_recurso/3.

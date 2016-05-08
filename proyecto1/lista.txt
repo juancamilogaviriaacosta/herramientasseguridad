@@ -1,0 +1,2 @@
+/home/juan/workspace/herramientasseguridad/proyecto1/datos/app1/AndroidManifest.xml
+/home/juan/workspace/herramientasseguridad/proyecto1/datos/app2/AndroidManifest.xml
