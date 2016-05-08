@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -23,42 +25,51 @@ import jpl.Query;
  * @author juan
  * Para ejecutar se de agregar los siguientes parametros
  * Parametros de la maquina virtual: -Djava.library.path=/usr/lib/swi-prolog/lib/amd64
- * Parametros del programa: rutas completas de los archivos lista.txt y baseprolog.pl
+ * Parametros del programa: lista.txt, permisos.txt y baseprolog.pl
  */
 public class Main {
 
 	public static void main(String[] args) {
 		try {
-			
-			File lista = new File (args[0]);
-			FileReader fr = new FileReader (lista);
-			BufferedReader br = new BufferedReader(fr);
-			String linea;
-			Query q1 = new Query("consult('" + args[1] + "')");
+			Query q1 = new Query("consult('" + args[2] + "')");
 			System.out.println(q1.hasSolution() ? "Archivo cargado" : "Error");
-			while((linea=br.readLine())!=null)
+			
+			File fPermisos = new File (args[1]);
+			FileReader frp = new FileReader (fPermisos);
+			BufferedReader brp = new BufferedReader(frp);
+			String linea;
+			while((linea=brp.readLine())!=null)
 			{
-				List<String> permisos = getPermisos(linea);
-				for (String p : permisos) {
-					Query q4 = new Query("permiso_peligroso(p"+p+")");
-					if(q4.hasSolution()) {
-						String[] split = linea.split("/");
-						System.out.println(split[split.length-2] + " tiene permisos peligrosos");
-						break;
-					}
+				Query q2 = null;
+				if(!linea.contains(",")) {
+					q2 = new Query("assert(permiso_peligroso(p"+linea+"))");
+				} else {
+					String[] split = linea.split(",");
+					q2 = new Query("assert(combinacion_peligrosa(p"+split[0]+", p"+split[1]+"))");
 				}
+				if(!q2.hasSolution()) {
+					System.out.println("Error en " + linea);
+				}
+			}
+			frp.close();
+			brp.close();
+			System.out.println("Hechos cargados");
+			
+			File fLista = new File (args[0]);
+			FileReader fr = new FileReader (fLista);
+			BufferedReader br = new BufferedReader(fr);
+			String linea3;
+			while((linea3=br.readLine())!=null)
+			{
+				String[] split = linea3.split("/");
+				String app = split[split.length-2];
+				List<String> permisos = getPermisos(linea3);
+				Query q4 = new Query("assert(aplicacion_permiso("+app+","+permisos.toString()+"))");
+				Hashtable<?,?>[] sol = q4.allSolutions();
+				System.out.println(Arrays.deepToString(sol));
 			}
 			fr.close();
 			br.close();
-			
-			
-//			Query q1 = new Query("consult('" + args[1] + "')");
-//			System.out.println(q1.hasSolution() ? "Archivo cargado" : "Error");
-//
-//			Query q4 = new Query("todos(X)");
-//			System.out.println(q4.oneSolution().get("X"));
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -76,7 +87,7 @@ public class Main {
 			if (parametro.getNodeType() == Node.ELEMENT_NODE) {
 				Element elemento = (Element) parametro;
 				String attribute = elemento.getAttribute("android:name");
-				parametros.add(attribute.substring(attribute.lastIndexOf(".") + 1, attribute.length()));
+				parametros.add("p" + attribute.substring(attribute.lastIndexOf(".") + 1, attribute.length()));
 			}
 		}
 		return parametros;

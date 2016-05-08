@@ -5,32 +5,25 @@ NICOLAS PINZON
 */
 
 /* Definicion de permisos */
-:- dynamic permiso/1.
+:- dynamic permiso_peligroso/1.
 permiso_peligroso(pINTERNET).
-permiso_peligroso(pREAD_PHONE_STATE).
-permiso_peligroso(pSEND_SMS).
-permiso_peligroso(pWRITE_EXTERNAL_STORAGE).
-permiso_peligroso(pRECEIVE_SMS).
-permiso_peligroso(pREAD_SMS).
-permiso_peligroso(pWRITE_SMS).
-permiso_peligroso(pACCESS_COARSE_LOCATION).
-permiso_peligroso(pREAD_CONTACTS).
-permiso_peligroso(pWRITE_CONTACTS).
-permiso_peligroso(pACCESS_FINE_LOCATION).
-permiso_peligroso(pCALL_PHONE).
-permiso_peligroso(pBLUETOOTH_ADMIN).
-permiso_peligroso(pCHANGE_CONFIGURATION).
-permiso_peligroso(pPROCESS_OUTGOING_CALLS).
-permiso_peligroso(pWRITE_CALL_LOG).
-permiso_peligroso(pREAD_SOCIAL_STREAM).
+permiso_peligroso(pSOCIAL).
+permiso_peligroso(pLLAMAR).
 
+/* Definicion de combinaciones peligrosas */
+:- dynamic combinacion_peligrosa/2.
+combinacion_peligrosa(pINETERNET, pLLAMAR).
 
+/* Relacion de aplicacion con permisos*/
+:- dynamic aplicacion_permiso/2.
+aplicacion_permiso(app1, [pINTERNET, pSOCIAL, pLLAMAR]).
+aplicacion_permiso(app2, pINTERNET).
+aplicacion_permiso(app3, pOTRO).
 
-
-
-
-
-
+/* Definicion de aplicacion peligrosa*/
+aplicacion_peligrosa_simple(X):- findall(A, (aplicacion_permiso(A,P), permiso_peligroso(P)), X).
+aplicacion_peligrosa_combinacion(A):- findall(P, (aplicacion_permiso(A,P), es_lista(P)), X),  findall([C,D], combinacion_peligrosa(C,D), Y), interseccion(X,Y,_).
+aplicaciones_peligrosas(X):- aplicacion_peligrosa_simple(A), aplicacion_peligrosa_combinacion(B), interseccion(A,B,X).
 
 
 
@@ -96,6 +89,9 @@ eliminar_repetios(L1, L2).
 
 
 /*----------------------------------------Utilidades----------------------------------------*/
+
+es_lista([]):-!.
+es_lista([_|Y]):-es_lista(Y).
 
 interseccion([], _, []).
 
