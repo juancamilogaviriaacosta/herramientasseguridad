@@ -19,11 +19,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import jpl.Compound;
 import jpl.Query;
+import jpl.Term;
 
 /**
  * @author juan
- * Para ejecutar se de agregar los siguientes parametros
+ * Para ejecutar se deben agregar los siguientes parametros
  * Parametros de la maquina virtual: -Djava.library.path=/usr/lib/swi-prolog/lib/amd64
  * Parametros del programa: lista.txt, permisos.txt y baseprolog.pl
  */
@@ -65,11 +67,19 @@ public class Main {
 				String app = split[split.length-2];
 				List<String> permisos = getPermisos(linea3);
 				Query q4 = new Query("assert(aplicacion_permiso("+app+","+permisos.toString()+"))");
-				Hashtable<?,?>[] sol = q4.allSolutions();
-				System.out.println(Arrays.deepToString(sol));
+				if(!q4.hasSolution()) {
+					System.out.println("Error en " + linea3);
+				}
 			}
 			fr.close();
 			br.close();
+			
+			Query q5 = new Query("aplicaciones_peligrosas(X)");
+			Hashtable<?,?> oneSolution = q5.oneSolution();
+			Compound comp = (Compound) oneSolution.get("X");
+			Term[] termArray = comp.toTermArray();
+			System.out.println("Las aplicaciones con permisos peligrosos son: " + Arrays.deepToString(termArray));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
