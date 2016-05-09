@@ -66,7 +66,7 @@ public class Main {
 			String linea3;
 			while((linea3=br.readLine())!=null)
 			{
-				String[] split = linea3.split("/");
+				String[] split = linea3.split(File.separator);
 				String app = split[split.length-2];
 				String permisos = Arrays.deepToString(getPermisos(linea3).toArray());
 				String hecho3 = "assert(aplicacion_permiso("+app+","+permisos+")).";
