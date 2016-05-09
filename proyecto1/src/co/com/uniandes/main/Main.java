@@ -35,7 +35,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			Query q1 = new Query("consult('" + args[2] + "')");
-			System.out.println(q1.hasSolution() ? "Archivo cargado" : "Error");
+			System.out.println(q1.hasSolution() ? "****Archivo cargado****" : "Error");
 			
 			File fPermisos = new File (args[1]);
 			FileReader frp = new FileReader (fPermisos);
@@ -45,10 +45,13 @@ public class Main {
 			{
 				Query q2 = null;
 				if(!linea.contains(",")) {
-					q2 = new Query("assert(permiso_peligroso(p"+linea.trim()+"))");
+					String hecho1 = "assert(permiso_peligroso(p"+linea.trim()+")).";
+					System.out.println(hecho1);
+					q2 = new Query(hecho1);
 				} else {
-					String[] split = linea.split(",");
-					q2 = new Query("assert(combinacion_peligrosa(p"+split[0].trim()+", p"+split[1].trim()+"))");
+					String hecho2 = "assert(combinacion_peligrosa("+formatearCombinacion(linea)+")).";
+					System.out.println(hecho2);
+					q2 = new Query(hecho2);
 				}
 				if(!q2.hasSolution()) {
 					System.out.println("Error en " + linea);
@@ -56,7 +59,6 @@ public class Main {
 			}
 			frp.close();
 			brp.close();
-			System.out.println("Hechos cargados");
 			
 			File fLista = new File (args[0]);
 			FileReader fr = new FileReader (fLista);
@@ -66,16 +68,17 @@ public class Main {
 			{
 				String[] split = linea3.split("/");
 				String app = split[split.length-2];
-				List<String> permisos = getPermisos(linea3);
-				for (String p : permisos) {
-					Query q4 = new Query("assert(aplicacion_permiso("+app+","+p+"))");
-					if(!q4.hasSolution()) {
-						System.out.println("Error en " + linea3);
-					}
+				String permisos = Arrays.deepToString(getPermisos(linea3).toArray());
+				String hecho3 = "assert(aplicacion_permiso("+app+","+permisos+")).";
+				System.out.println(hecho3);
+				Query q4 = new Query(hecho3);
+				if(!q4.hasSolution()) {
+					System.out.println("Error en " + linea3);
 				}
 			}
 			fr.close();
 			br.close();
+			System.out.println("****Hechos cargados****");
 			
 			Query q5 = new Query("aplicaciones_peligrosas(X)");
 			Hashtable<?,?> oneSolution = q5.oneSolution();
@@ -104,5 +107,14 @@ public class Main {
 			}
 		}
 		return parametros;
+	}
+	
+	public static String formatearCombinacion(String linea) {
+		List<String> temp = new ArrayList<>();
+		String[] split = linea.split(",");
+		for (String s : split) {
+			temp.add("p" + s.trim());
+		}
+		return Arrays.deepToString(temp.toArray());
 	}
 }
