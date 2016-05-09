@@ -14,13 +14,15 @@ NICOLAS PINZON
 :- dynamic aplicacion_permiso/2.
 
 /* Definicion de aplicacion peligrosa cuando contiene algun permiso peligroso */
-aplicacion_peligrosa_simple(X):- findall(A, (aplicacion_permiso(A,P), permiso_peligroso(P1), member(P1, P)), X).
+aplicacion_peligrosa_simple_tmp(X):- findall(A, (aplicacion_permiso(A,P), permiso_peligroso(P1), member(P1, P)), X).
+aplicacion_peligrosa_simple(X):- aplicacion_peligrosa_simple_tmp(Y), list_to_set(Y, Z), sort(Z, X).
 
 /* Definicion de aplicacion peligrosa cuando contiene alguna combinacion peligrosa */
-aplicacion_peligrosa_combinacion(X):- findall(A, (combinacion_peligrosa(C1), sort(C1, C2), aplicacion_permiso(A, P), sort(P, C2)), X).
+aplicacion_peligrosa_combinacion_tmp(X):- findall(A, (combinacion_peligrosa(C1), sort(C1, C2), aplicacion_permiso(A, P1), sort(P1, P2), subset(C2, P2)), X).
+aplicacion_peligrosa_combinacion(X):- aplicacion_peligrosa_combinacion_tmp(Y), list_to_set(Y, Z), sort(Z, X).
 
 /* Union y sin repetidos de los dos anteriores*/
-aplicaciones_peligrosas(X):- aplicacion_peligrosa_simple(A), aplicacion_peligrosa_combinacion(B), union(A,B,Y), list_to_set(Y,X).
+aplicaciones_peligrosas(X):- aplicacion_peligrosa_simple(A), aplicacion_peligrosa_combinacion(B), union(A,B,Y), list_to_set(Y,Z), sort(Z, X).
 
 
 

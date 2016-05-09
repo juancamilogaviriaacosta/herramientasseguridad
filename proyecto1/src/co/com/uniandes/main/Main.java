@@ -35,7 +35,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			Query q1 = new Query("consult('" + args[2] + "')");
-			System.out.println(q1.hasSolution() ? "****Archivo cargado****" : "Error");
+			System.out.println(q1.hasSolution() ? "****Archivo cargado****\n" : "Error");
 			
 			File fPermisos = new File (args[1]);
 			FileReader frp = new FileReader (fPermisos);
@@ -78,17 +78,21 @@ public class Main {
 			}
 			fr.close();
 			br.close();
-			System.out.println("****Hechos cargados****");
-			
-			Query q5 = new Query("aplicaciones_peligrosas(X)");
-			Hashtable<?,?> oneSolution = q5.oneSolution();
-			Compound comp = (Compound) oneSolution.get("X");
-			Term[] termArray = comp.toTermArray();
-			System.out.println("Las aplicaciones con permisos peligrosos son: " + Arrays.deepToString(termArray));
-			
+			System.out.println("****Hechos cargados****\n");
+			System.out.println(llamarSolucion("aplicacion_peligrosa_simple(X)",			"Las aplicaciones que usan al menos un permiso peligroso son: "));
+			System.out.println(llamarSolucion("aplicacion_peligrosa_combinacion(X)",	"Las aplicaciones que usan alguna combinacion de permisos peligrosos son: "));
+			System.out.println(llamarSolucion("aplicaciones_peligrosas(X)",				"Todas las aplicaciones peligrosas son: "));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static String llamarSolucion(String predicado, String texto) {
+		Query q5 = new Query(predicado);
+		Hashtable<?,?> oneSolution = q5.oneSolution();
+		Compound comp = (Compound) oneSolution.get("X");
+		Term[] termArray = comp.toTermArray();
+		return texto + Arrays.deepToString(termArray);
 	}
 
 	public static List<String> getPermisos(String archivo) throws ParserConfigurationException, SAXException, IOException {
