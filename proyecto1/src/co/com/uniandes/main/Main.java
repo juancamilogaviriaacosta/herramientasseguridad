@@ -66,9 +66,11 @@ public class Main {
 				String[] split = linea3.split("/");
 				String app = split[split.length-2];
 				List<String> permisos = getPermisos(linea3);
-				Query q4 = new Query("assert(aplicacion_permiso("+app+","+permisos.toString()+"))");
-				if(!q4.hasSolution()) {
-					System.out.println("Error en " + linea3);
+				for (String p : permisos) {
+					Query q4 = new Query("assert(aplicacion_permiso("+app+","+p+"))");
+					if(!q4.hasSolution()) {
+						System.out.println("Error en " + linea3);
+					}
 				}
 			}
 			fr.close();
