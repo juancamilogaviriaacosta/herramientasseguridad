@@ -13,18 +13,19 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import jpl.Compound;
+import jpl.Query;
+import jpl.Term;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import jpl.Compound;
-import jpl.Query;
-import jpl.Term;
-
 /**
  * @author juan
+ * Probado en ubuntu 14.04 X64: sudo apt-get install swi-prolog swi-prolog-java
  * Para ejecutar se deben agregar los siguientes parametros
  * Parametros de la maquina virtual: -Djava.library.path=/usr/lib/swi-prolog/lib/amd64
  * Parametros del programa: lista.txt, permisos.txt y baseprolog.pl
@@ -44,10 +45,10 @@ public class Main {
 			{
 				Query q2 = null;
 				if(!linea.contains(",")) {
-					q2 = new Query("assert(permiso_peligroso(p"+linea+"))");
+					q2 = new Query("assert(permiso_peligroso(p"+linea.trim()+"))");
 				} else {
 					String[] split = linea.split(",");
-					q2 = new Query("assert(combinacion_peligrosa(p"+split[0]+", p"+split[1]+"))");
+					q2 = new Query("assert(combinacion_peligrosa(p"+split[0].trim()+", p"+split[1].trim()+"))");
 				}
 				if(!q2.hasSolution()) {
 					System.out.println("Error en " + linea);
