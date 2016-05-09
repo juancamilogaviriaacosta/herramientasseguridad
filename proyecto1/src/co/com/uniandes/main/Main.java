@@ -95,7 +95,7 @@ public class Main {
 		return texto + Arrays.deepToString(termArray);
 	}
 
-	public static List<String> getPermisos(String archivo) throws ParserConfigurationException, SAXException, IOException {
+	private static List<String> getPermisos(String archivo) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 		Document doc = docBuilder.parse(new File(archivo));
@@ -113,7 +113,7 @@ public class Main {
 		return parametros;
 	}
 	
-	public static String formatearCombinacion(String linea) {
+	private static String formatearCombinacion(String linea) {
 		List<String> temp = new ArrayList<>();
 		String[] split = linea.split(",");
 		for (String s : split) {
