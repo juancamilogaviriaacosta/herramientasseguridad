@@ -107,7 +107,8 @@ public class Main {
 			if (parametro.getNodeType() == Node.ELEMENT_NODE) {
 				Element elemento = (Element) parametro;
 				String attribute = elemento.getAttribute("android:name");
-				parametros.add("p" + attribute.substring(attribute.lastIndexOf(".") + 1, attribute.length()));
+				String p = "p" + attribute.substring(attribute.lastIndexOf(".") + 1, attribute.length());
+				parametros.add(p.trim());
 			}
 		}
 		return parametros;
