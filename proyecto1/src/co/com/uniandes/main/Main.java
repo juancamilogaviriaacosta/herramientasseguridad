@@ -66,11 +66,16 @@ public class Main {
 			FileReader fr = new FileReader (fLista);
 			BufferedReader br = new BufferedReader(fr);
 			String linea3;
+			int cont = 0;
 			while((linea3=br.readLine())!=null)
 			{
 				if(linea3!=null && !linea3.isEmpty()) {
+					cont++;
 					String[] split = linea3.split(File.separator);
-					String app = split[split.length-2];
+					String app = split[split.length-2].toLowerCase();
+					if(!app.substring(0, 1).matches("[a-z]") || !app.matches("[a-z0-9]+")) {
+						app = "app" + cont;
+					}
 					String permisos = Arrays.deepToString(getPermisos(linea3).toArray());
 					String hecho3 = "assert(aplicacion_permiso("+app+","+permisos+")).";
 					System.out.println(hecho3);
