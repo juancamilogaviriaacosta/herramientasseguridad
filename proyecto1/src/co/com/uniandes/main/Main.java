@@ -43,18 +43,20 @@ public class Main {
 			String linea;
 			while((linea=brp.readLine())!=null)
 			{
-				Query q2 = null;
-				if(!linea.contains(",")) {
-					String hecho1 = "assert(permiso_peligroso(p"+linea.trim()+")).";
-					System.out.println(hecho1);
-					q2 = new Query(hecho1);
-				} else {
-					String hecho2 = "assert(combinacion_peligrosa("+formatearCombinacion(linea)+")).";
-					System.out.println(hecho2);
-					q2 = new Query(hecho2);
-				}
-				if(!q2.hasSolution()) {
-					System.out.println("Error en " + linea);
+				if(linea!=null && !linea.isEmpty()) {
+					Query q2 = null;
+					if(!linea.contains(",")) {
+						String hecho1 = "assert(permiso_peligroso(p"+linea.trim()+")).";
+						System.out.println(hecho1);
+						q2 = new Query(hecho1);
+					} else {
+						String hecho2 = "assert(combinacion_peligrosa("+formatearCombinacion(linea)+")).";
+						System.out.println(hecho2);
+						q2 = new Query(hecho2);
+					}
+					if(!q2.hasSolution()) {
+						System.out.println("Error en " + linea);
+					}
 				}
 			}
 			frp.close();
@@ -66,14 +68,16 @@ public class Main {
 			String linea3;
 			while((linea3=br.readLine())!=null)
 			{
-				String[] split = linea3.split(File.separator);
-				String app = split[split.length-2];
-				String permisos = Arrays.deepToString(getPermisos(linea3).toArray());
-				String hecho3 = "assert(aplicacion_permiso("+app+","+permisos+")).";
-				System.out.println(hecho3);
-				Query q4 = new Query(hecho3);
-				if(!q4.hasSolution()) {
-					System.out.println("Error en " + linea3);
+				if(linea3!=null && !linea3.isEmpty()) {
+					String[] split = linea3.split(File.separator);
+					String app = split[split.length-2];
+					String permisos = Arrays.deepToString(getPermisos(linea3).toArray());
+					String hecho3 = "assert(aplicacion_permiso("+app+","+permisos+")).";
+					System.out.println(hecho3);
+					Query q4 = new Query(hecho3);
+					if(!q4.hasSolution()) {
+						System.out.println("Error en " + linea3);
+					}
 				}
 			}
 			fr.close();
